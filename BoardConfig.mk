@@ -1,6 +1,8 @@
 #
 # Copyright 2018 The Android Open Source Project
 #
+#  Copyright (C) 2021-2022 The OrangeFox Recovery Project
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,16 +18,16 @@
 
 # Architecture
 TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-a
+TARGET_ARCH_VARIANT := armv8-2a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := cortex-a73
+TARGET_CPU_VARIANT := cortex-a76
 
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv8-a
+TARGET_2ND_ARCH_VARIANT := armv8-2a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := cortex-a73
+TARGET_2ND_CPU_VARIANT := cortex-a55
 
 TARGET_SUPPORTS_64_BIT_APPS := true
 ENABLE_CPUSETS := true
@@ -54,8 +56,6 @@ BOARD_KERNEL_SECOND_OFFSET := 0x00000000
 BOARD_RAMDISK_OFFSET       := 0x01000000
 BOARD_DTB_OFFSET           := 0x01f00000
 TARGET_KERNEL_ARCH := arm64
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo
 BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
@@ -66,7 +66,24 @@ BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --second_offset $(BOARD_KERNEL_SECOND_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
+
+ifeq ($(FOX_VARIANT),MIUI)
+# MIUI kernel from vayu_global_images_V12.5.4.0.RJUMIXM_20210818.0000.00_11.0_global
+   TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/miui/Image
+   BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/miui/dtbo.img
+   BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/miui/dtbs
+else
+   TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
+   BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+   BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtbs
+endif
+
+ifeq ($(FOX_VARIANT),testkernel)
+  KERNEL_PATH := $(DEVICE_PATH)/newkernel
+  TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/Image.gz-dtb
+  BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbo.img
+  BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
+endif
 
 # Avb
 BOARD_AVB_ENABLE := true
@@ -103,3 +120,7 @@ BOARD_HAS_LARGE_FILESYSTEM := true
 # Crypto
 BOARD_USES_QCOM_FBE_DECRYPTION := true
 BOARD_USES_METADATA_PARTITION := true
+
+# drift/offset
+TW_QCOM_ATS_OFFSET := 1617714502203
+#
