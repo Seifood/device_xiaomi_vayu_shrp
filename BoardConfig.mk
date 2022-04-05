@@ -123,4 +123,20 @@ BOARD_USES_METADATA_PARTITION := true
 
 # drift/offset
 TW_QCOM_ATS_OFFSET := 1617714502203
-#
+
+# SHRP Stuff
+SHRP_PATH := device/xiaomi/vayu
+SHRP_MAINTAINER := Droneship
+SHRP_DEVICE_CODE := Vayu
+SHRP_REC_TYPE := Treble
+SHRP_DEVICE_TYPE := A_Only
+INC_IN_REC_MAGISK := true
+SHRP_NOTCH := true
+SHRP_EDL_MODE := 1
+SHRP_EXTERNAL := /external_sd
+SHRP_INTERNAL := /sdcard
+SHRP_OTG := /usb_otg
+SHRP_FLASH := 1
+SHRP_DARK := true
+SHRP_REC := /dev/block/bootdevice/by-name/recovery
+SHRP_EXPRESS := true
